@@ -1,0 +1,42 @@
+name: checkbox-phoronix # you probably want to 'snapcraft register <name>'
+base: core22 # the base snap is the execution environment for this snap
+version: '1.0' # just for humans, typically '1.2+git' or '1.3.2'
+summary: A checkbox test to run phoronix test suite
+description: |
+  Phoronix Test Suite (PTS) is a free and open-source benchmark software for
+  Linux and other operating systems which are developed by Michael Larabel 
+  and Matthew Tippett. This automates PTS using Canonical's Checkbox test
+  automation software. 
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: classic # use 'strict' once you have the right plugs and slots
+
+apps:
+  checkbox-pts:
+    command-chain: [bin/wrapper_local]
+    command: bin/checkbox-pts
+
+parts:
+  checkbox-provider-phoronix:
+    plugin: dump
+    source: ./checkbox-provider-phoronix
+    source-type: local
+    build-snaps:
+      - checkbox-provider-tools
+      - checkbox22
+    stage-packages:
+      - libssl-dev
+    override-build: |
+      export PYTHONPATH=$SNAPCRAFT_STAGE/lib/python3.10/site-packages:$SNAPCRAFT_STAGE/usr/lib/python3/dist-packages
+      for path in $(find "/snap/checkbox22/current/providers/" -mindepth 1 -maxdepth 1 -type d); do export PROVIDERPATH=$path${PROVIDERPATH:+:$PROVIDERPATH}; done
+      checkbox-provider-tools validate
+      checkbox-provider-tools build
+      checkbox-provider-tools install --layout=relocatable --prefix=/providers/checkbox-provider-phoronix --root="$SNAPCRAFT_PART_INSTALL"
+  bin:
+    plugin: dump
+    source: bin/
+    organize:
+      '*': bin/
+  config-variables:
+    plugin: dump
+    source: config/
