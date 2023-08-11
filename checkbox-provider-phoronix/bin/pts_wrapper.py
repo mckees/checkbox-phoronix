@@ -93,6 +93,7 @@ class InstallationHandler:
             return False
 
     def install(self, test_id):
+        subprocess.run([self.pts_bin, 'install-dependencies', test_id], env=os.environ)
         subprocess.run([self.pts_bin, 'install', test_id], env=os.environ)
 
 
