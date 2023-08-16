@@ -108,16 +108,14 @@ def main():
     test_id = sys.argv[1]
 
     installer = InstallationHandler(pts_bin)
-    installed = installer.isInstalled(test_id)
-    if not installed:
-        installer.install(test_id)
+    installer.install(test_id)
 
     pts_results_dir = os.path.join(
         os.environ.get('PTS_USER_PATH_OVERRIDE',
                        os.path.expanduser('~/.phoronix-test-suite')),
         'test-results')
     observer = ObservedDirectory(pts_results_dir)
-    subprocess.run([pts_bin, 'batch-run', test_id], env=os.environ)
+    subprocess.run([pts_bin, 'benchmark', test_id], env=os.environ)
     for changed_dir in observer.get_changed():
         res_path = os.path.join(pts_results_dir, changed_dir)
         res_file = PTSResultFile(res_path)

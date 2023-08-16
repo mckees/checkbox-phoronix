@@ -8,11 +8,6 @@ id: pts
 _name: Phoronix Test Suite
 include:
  pts-prepare-nest
- pts/encode-mp3
- pts/fs-mark
- pts/john-the-ripper
- pts/ramspeed
- pts-generate-report
  pts-attach-report
 bootstrap_include:
  com.canonical.certification::cpuinfo
@@ -24,10 +19,7 @@ category_id: phoronix
 id: pts-autotest
 _name: Phoronix Test Suite - Autotest suite
 include:
- pts/john-the-ripper
- pts/openssl
- pts/povray
- pts/ttsiod-renderer
+ kobuk-bench-short
 bootstrap_include:
  com.canonical.certification::cpuinfo
  com.canonical.certification::environment
@@ -39,30 +31,8 @@ plugin: resource
 requires:
  cpuinfo.platform == "x86_64"
 command:
- echo id: pts/encode-mp3
- echo "name: This test measures the time required to encode a WAV file to MP3 format."
- echo
- echo id: pts/fs-mark
- echo "name: FS_Mark is designed to test a system's file-system performance."
- echo
- echo id: pts/john-the-ripper
- echo "name: This is a benchmark of John The Ripper, which is a password cracker."
- echo
- echo id: pts/network-loopback
- echo "name: This test measures the loopback network adapter performance using a micro-benchmark to measure the TCP performance."
- echo
- echo id: pts/ramspeed
- echo "name: This benchmark tests the system memory (RAM) performance."
- echo
- echo id: pts/openssl
- echo "name: This test measures the RSA 4096-bit performance of OpenSSL."
- echo
- echo id: pts/povray
- echo "name: This is a test of POV-Ray, the Persistence of Vision Raytracer."
- echo
- echo id: pts/ttsiod-renderer
- echo "name: A portable GPL 3D software renderer that supports OpenMP and Intel Threading Building Blocks with many different rendering modes."
- echo
+ echo 'id: kobuk-bench-short'
+ echo 'name: A shortened version of the whole Kobuk PTS suite'
 
 id: pts-prepare-nest
 category_id: phoronix
@@ -96,7 +66,6 @@ command:
  pts_wrapper.py {id}
 plugin: shell
 depends: pts-prepare-nest
-flags: has-leftovers
 
 id: pts-generate-report
 category_id: phoronix

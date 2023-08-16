@@ -30,6 +30,7 @@ parts:
       - checkbox22
     stage-packages:
       - libssl-dev
+      - openssl
       - build-essential
       - php-cli
       - php-xml
@@ -40,7 +41,9 @@ parts:
       - unzip
       - apt-file
     override-build: |
-      export PYTHONPATH=$SNAPCRAFT_STAGE/lib/python3.10/site-packages:$SNAPCRAFT_STAGE/usr/lib/python3/dist-packages
+      export LD_LIBRARY_PATH=/usr/lib:/usr/lib64/:/usr/lib/x86_64-linux-gnu
+      export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/snap/bin
+      #export PYTHONPATH=$SNAPCRAFT_STAGE/lib/python3.10/site-packages:$SNAPCRAFT_STAGE/usr/lib/python3/dist-packages
       for path in $(find "/snap/checkbox22/current/providers/" -mindepth 1 -maxdepth 1 -type d); do export PROVIDERPATH=$path${PROVIDERPATH:+:$PROVIDERPATH}; done
       checkbox-provider-tools validate
       checkbox-provider-tools build
